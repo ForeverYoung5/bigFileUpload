@@ -51,20 +51,23 @@ app.post('/verFileIsExist', jsonParser, async (req, res) => {
 })
 
 app.post('/upload', async (req, res) => {
-  const multipart = new multiparty.Form();
-  multipart.parse(req, async (err, fields, files) => {
-    if (err) return;
-    const [chunk] = files.chunk;
-    const [hash] = fields.hash;
-    const [suffix] = fields.suffix;
-    // 注意这里的hash包含文件的hash和块的索引，所以需要使用split切分
-    const chunksDir = path.resolve(UPLOAD_FILES_DIR, hash.split("-")[0]);
-    if (!fse.existsSync(chunksDir)) {
-      await fse.mkdirs(chunksDir);
-    }
-    await fse.move(chunk.path, chunksDir + "/" + hash);
-  })
-  res.status(200).send("received file chunk")
+  // 营造一种接口响应很慢的假象
+  setTimeout(() => {
+    const multipart = new multiparty.Form();
+    multipart.parse(req, async (err, fields, files) => {
+      if (err) return;
+      const [chunk] = files.chunk;
+      const [hash] = fields.hash;
+      const [suffix] = fields.suffix;
+      // 注意这里的hash包含文件的hash和块的索引，所以需要使用split切分
+      const chunksDir = path.resolve(UPLOAD_FILES_DIR, hash.split("-")[0]);
+      if (!fse.existsSync(chunksDir)) {
+        await fse.mkdirs(chunksDir);
+      }
+      await fse.move(chunk.path, chunksDir + "/" + hash);
+    })
+    res.status(200).send("received file chunk")
+  }, 3000)
 })
 
 const pipeStream = (path, writeStream) =>
