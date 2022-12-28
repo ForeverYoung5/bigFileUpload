@@ -52,7 +52,7 @@ app.post('/verFileIsExist', jsonParser, async (req, res) => {
 
 app.post('/upload', async (req, res) => {
   // 营造一种接口响应很慢的假象
-  setTimeout(() => {
+  // setTimeout(() => {
     const multipart = new multiparty.Form();
     multipart.parse(req, async (err, fields, files) => {
       if (err) return;
@@ -67,7 +67,7 @@ app.post('/upload', async (req, res) => {
       await fse.move(chunk.path, chunksDir + "/" + hash);
     })
     res.status(200).send("received file chunk")
-  }, 3000)
+  // }, 3000)
 })
 
 const pipeStream = (path, writeStream) =>

@@ -4,7 +4,7 @@ import styled from "styled-components";
 import hashWorker from "./utils/hash-worker";
 import WorkerBuilder from "./utils/worker-build";
 
-const CHUNK_SIZE = 500;
+const CHUNK_SIZE = 500000;
 
 const UpLoadFile = function () {
   const [fileName, setFileName] = useState("");
